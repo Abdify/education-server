@@ -1,24 +1,37 @@
-
-import scrape from 'website-scraper';
+import fs from 'fs';
+import { CollectContent, Root, Scraper } from "nodejs-web-scraper";
 
 export const searchEq = async (req, res) => {
     const { url } = req.query;
     const finalUrl = "https://" + url.slice(2);
-    
-    const options = {
-        urls: [finalUrl],
-        directory: "./result",
-    };
 
+ 
     try {
-        const result = await scrape(options);
-        
-        const links = result[0].text.slice(10000,20000).match(/<a href="\/url\?q=https:\/\/\S+"/);
-        console.log(links);
-        // res.status(200).json(chapters);
-    } 
+
+const config = {
+    baseSiteUrl: `https://www.quora.com/`,
+    startUrl: `https://www.quora.com/search?q=math`,
+    filePath: "./images/",
+    logPath: "./logs/",
+};
+
+const scraper = new Scraper(config);
+const root = new Root(); 
+
+const title = new CollectContent("q-text", ".puppeteer_test_question_title", ); 
+
+root.addOperation(title);
+await scraper.scrape(root);
+
+const articles = title.getData();
+
+fs.writeFile("./articles.json", JSON.stringify(articles), () => {
     
-    catch (error) {
+});
+
+    
+
+    } catch (error) {
         console.log(error);
         res.json({ message: error.message });
     }

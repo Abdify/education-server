@@ -1,8 +1,9 @@
 import express from "express";
-import { searchEq } from "../controllers/searchEq.js";
+import { searchEq2 } from "../controllers/searchEq2.js";
 
 const router = express.Router();
 
-router.get("/", searchEq);
+router.get("/", searchEq2);
+router.post("/", searchEq2);
 
 export default router;
